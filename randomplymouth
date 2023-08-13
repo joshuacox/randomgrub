@@ -1,0 +1,49 @@
+#!/bin/bash
+THIS_LOGDIR=/tmp
+THIS_NAME=randomplymouthupdater
+HISTORY_FILE=/var/log/.past_plymouths
+# Derived
+THIS_LOG=$THIS_LOGDIR/$THIS_NAME.log
+THIS_ERR=$THIS_LOGDIR/$THIS_NAME.err
+NOW=$(date +'%s')
+date -I >> $THIS_LOG
+if [[ ! -f $HISTORY_FILE ]]; then
+	touch $HISTORY_FILE >>$THIS_LOG 2>>$THIS_ERR
+fi
+
+zipper () {
+  if [[ -f $1 ]]; then
+    gzip $1
+  fi
+}
+
+cleanup () {
+  zipper $THIS_LOG
+  zipper $THIS_ERR
+}
+trap cleanup EXIT
+
+main () {
+  possible_themes=$(sudo plymouth-set-default-theme -l)
+  for i in $possible_themes
+  do
+    grep $i  $HISTORY_FILE > /dev/null
+    if [[ $? -eq 1 ]];then
+      themes+=("$i")
+    fi
+  done
+  if [[ -z $themes ]]; then
+    echo '' > $HISTORY_FILE
+    for i in $possible_themes
+    do
+      themes+=("$i")
+    done
+  fi
+  export PLYMOUTH_THEME=${themes[ $RANDOM % ${#themes[@]} ]}
+  echo $PLYMOUTH_THEME >> $HISTORY_FILE
+  echo $PLYMOUTH_THEME >> $THIS_LOG
+  echo plymouth-set-default-theme -R $PLYMOUTH_THEME
+  plymouth-set-default-theme -R $PLYMOUTH_THEME >>$THIS_LOG 2>>$THIS_ERR
+}
+
+main
