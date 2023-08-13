@@ -1,10 +1,11 @@
 #!/bin/bash
 # Add any known themes to the possible_theme_paths array
-possible_theme_paths+=("/boot/grub/themes/starfield")
-possible_theme_paths+=("/usr/share/grub/themes/breeze/theme.txt") 
-possible_theme_paths+=("/usr/share/grub/themes/Vimix/theme.txt")
+theme_dir_paths+=("/boot/grub/themes")
+theme_dir_paths+=("/usr/share/grub/themes") 
+#possible_theme_paths+=("/usr/share/grub/themes/Vimix)
 THIS_LOGDIR=/tmp
-THIS_NAME=randomupdater
+THIS_NAME=randomgrub
+HISTORY_FILE=/var/log/.past_grubs
 # Derived
 THIS_LOG=$THIS_LOGDIR/$THIS_NAME.log
 THIS_ERR=$THIS_LOGDIR/$THIS_NAME.err
@@ -12,20 +13,49 @@ THIS_ERR=$THIS_LOGDIR/$THIS_NAME.err
 NOW=$(date +'%s')
 date -I >> $THIS_LOG
 
-main () {
+zipper () {
+  if [[ -f $1 ]]; then
+    gzip $1
+  fi
+}
+
+cleanup () {
+  zipper $THIS_LOG
+  zipper $THIS_ERR
+}
+trap cleanup EXIT
+
+theme_finder () {
   # add any directory in /boot/grub/themes that contains a theme.txt
-  for i in $(find /boot/grub/themes -name theme.txt)
+  #for i in $(find /boot/grub/themes -name theme.txt)
+  for i in $(find $1 -name theme.txt)
   do
     possible_theme_paths+=("$i")
   done
-  
+}
+
+main () {
+  for theme_dir in "${theme_dir_paths[@]}"
+  do
+    theme_finder $theme_dir
+  done
+
   # process possible themes
   for value in "${possible_theme_paths[@]}"
   do
     if [[ -f "$value" ]]; then
-      theme_paths+=("$value")
+      alt_theme_paths+=("$value")
+      grep $value  $HISTORY_FILE > /dev/null
+      if [[ $? -eq 1 ]];then
+        theme_paths+=("$value")
+      fi
     fi
   done
+  if [[ -z $theme_paths ]]; then
+    echo 'clear history file'
+    echo '' > $HISTORY_FILE
+    theme_paths=$alt_theme_paths
+  fi
   
   print_all () {
     for value in "${theme_paths[@]}"
@@ -33,9 +63,11 @@ main () {
       echo $value
     done
   }
-  # print_all
+  #print_all
+  #exit 1
   
   export GRUB_THEME=${theme_paths[ $RANDOM % ${#theme_paths[@]} ]}
+  echo $GRUB_THEME >> $HISTORY_FILE
   echo $GRUB_THEME >> $THIS_LOG
   # echo $GRUB_THEME
   
@@ -51,6 +83,9 @@ main () {
   THEN=$(date +'%s')
   echo -n "This took $(($THEN - $NOW)) seconds " >>$THIS_LOG
   echo '<<< END of random updater >>>' >>$THIS_LOG
+
+  zipper $THIS_LOG
+  zipper $THIS_ERR
 }
 
 main
