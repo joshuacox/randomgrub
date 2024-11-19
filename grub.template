@@ -1,0 +1,14 @@
+GRUB_DEFAULT=saved
+GRUB_TIMEOUT=5
+GRUB_DISTRIBUTOR="Arch"
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet splash zswap.enabled=1 zswap.compressor=lz4 zswap.max_pool_percent=23 zswap.zpool=z3fold zswap.accept_threshold_percent=88"
+GRUB_CMDLINE_LINUX="rd.luks.name=deadbeef=crypt root=/dev/myVG/root threadirqs resume=UUID=deadbeef123 apci_osi='!Windows 2013' acpi_osi='!Windows 2012'"
+GRUB_PRELOAD_MODULES="part_gpt part_msdos"
+GRUB_TIMEOUT_STYLE=menu
+GRUB_TERMINAL_INPUT=console
+GRUB_GFXMODE=auto
+GRUB_GFXPAYLOAD_LINUX=keep
+GRUB_DISABLE_RECOVERY=true
+GRUB_THEME="$GRUB_THEME"
+GRUB_SAVEDEFAULT=true
+GRUB_DISABLE_OS_PROBER=false
