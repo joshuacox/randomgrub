@@ -7,16 +7,20 @@ HISTORY_FILE=/var/log/.past_plymouths
 # Derived
 THIS_LOG=$THIS_LOGDIR/$THIS_NAME.log
 THIS_ERR=$THIS_LOGDIR/$THIS_NAME.err
-NOW=$(date +'%s')
-date -I >> $THIS_LOG
-if [[ ! -f $HISTORY_FILE ]]; then
-	touch $HISTORY_FILE >>$THIS_LOG 2>>$THIS_ERR
-fi
-trap cleanup EXIT
 open_file $THIS_LOG
 open_file $THIS_ERR
+cleanup () {
+  zipper $THIS_LOG
+  zipper $THIS_ERR
+}
+trap cleanup EXIT
 
 main () {
+  NOW=$(date +'%s')
+  date -I >> $THIS_LOG
+  if [[ ! -f $HISTORY_FILE ]]; then
+    touch $HISTORY_FILE >>$THIS_LOG 2>>$THIS_ERR
+  fi
   possible_themes=$(sudo plymouth-set-default-theme -l)
   for i in $possible_themes
   do

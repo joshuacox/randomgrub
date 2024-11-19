@@ -21,7 +21,7 @@ phile_czekr () {
 
 open_file () {
   if [[ -f ${1}.gz ]]; then
-    unzipper $1
+    unzipper ${1}.gz
   fi
 }
 
@@ -35,11 +35,6 @@ unzipper () {
   if [[ -f $1 ]]; then
     gunzip $1
   fi
-}
-
-cleanup () {
-  zipper $THIS_LOG
-  zipper $THIS_ERR
 }
 
 theme_finder () {
