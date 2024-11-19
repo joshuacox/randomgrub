@@ -19,6 +19,11 @@ phile_czekr () {
   fi
 }
 
+cleanup () {
+  zipper $THIS_LOG
+  zipper $THIS_ERR
+}
+
 open_file () {
   if [[ -f ${1}.gz ]]; then
     unzipper ${1}.gz

@@ -1,6 +1,6 @@
 #!/bin/bash
 source librandum.bash
-UPDATE_INTERVAL=5
+UPDATE_INTERVAL=2
 THIS_LOGDIR=/tmp
 THIS_NAME=randomplymouthupdater
 HISTORY_FILE=/var/log/.past_plymouths
@@ -9,10 +9,6 @@ THIS_LOG=$THIS_LOGDIR/$THIS_NAME.log
 THIS_ERR=$THIS_LOGDIR/$THIS_NAME.err
 open_file $THIS_LOG
 open_file $THIS_ERR
-cleanup () {
-  zipper $THIS_LOG
-  zipper $THIS_ERR
-}
 trap cleanup EXIT
 
 main () {
