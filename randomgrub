@@ -1,4 +1,6 @@
 #!/bin/bash
+source librandum.bash
+UPDATE_INTERVAL=3
 GRUB_TEMPLATE=/root/grub.template
 # Add any known themes to the possible_theme_paths array
 theme_dir_paths+=("/boot/grub/themes")
@@ -13,27 +15,11 @@ THIS_ERR=$THIS_LOGDIR/$THIS_NAME.err
 
 NOW=$(date +'%s')
 date -I >> $THIS_LOG
-
-zipper () {
-  if [[ -f $1 ]]; then
-    gzip $1
-  fi
-}
-
 cleanup () {
   zipper $THIS_LOG
   zipper $THIS_ERR
 }
 trap cleanup EXIT
-
-theme_finder () {
-  # add any directory in /boot/grub/themes that contains a theme.txt
-  #for i in $(find /boot/grub/themes -name theme.txt)
-  for i in $(find $1 -name theme.txt)
-  do
-    possible_theme_paths+=("$i")
-  done
-}
 
 main () {
   for theme_dir in "${theme_dir_paths[@]}"
@@ -89,4 +75,4 @@ main () {
   zipper $THIS_ERR
 }
 
-main
+phile_czekr "$HISTORY_FILE" $UPDATE_INTERVAL main

@@ -1,4 +1,6 @@
 #!/bin/bash
+source librandum.bash
+UPDATE_INTERVAL=5
 THIS_LOGDIR=/tmp
 THIS_NAME=randomplymouthupdater
 HISTORY_FILE=/var/log/.past_plymouths
@@ -10,17 +12,6 @@ date -I >> $THIS_LOG
 if [[ ! -f $HISTORY_FILE ]]; then
 	touch $HISTORY_FILE >>$THIS_LOG 2>>$THIS_ERR
 fi
-
-zipper () {
-  if [[ -f $1 ]]; then
-    gzip $1
-  fi
-}
-
-cleanup () {
-  zipper $THIS_LOG
-  zipper $THIS_ERR
-}
 trap cleanup EXIT
 
 main () {
@@ -46,4 +37,4 @@ main () {
   plymouth-set-default-theme -R $PLYMOUTH_THEME >>$THIS_LOG 2>>$THIS_ERR
 }
 
-main
+phile_czekr "$HISTORY_FILE" $UPDATE_INTERVAL main
