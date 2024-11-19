@@ -13,6 +13,14 @@ HISTORY_FILE=/var/log/.past_grubs
 THIS_LOG=$THIS_LOGDIR/$THIS_NAME.log
 THIS_ERR=$THIS_LOGDIR/$THIS_NAME.err
 
+open_file () {
+  if [[ -f ${1}.gz ]]; then
+    unzipper $1
+  fi
+}
+open_file $THIS_LOG
+open_file $THIS_ERR
+
 NOW=$(date +'%s')
 date -I >> $THIS_LOG
 cleanup () {

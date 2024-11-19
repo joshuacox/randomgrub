@@ -19,9 +19,21 @@ phile_czekr () {
   fi
 }
 
+open_file () {
+  if [[ -f ${1}.gz ]]; then
+    unzipper $1
+  fi
+}
+
 zipper () {
   if [[ -f $1 ]]; then
     gzip $1
+  fi
+}
+
+unzipper () {
+  if [[ -f $1 ]]; then
+    gunzip $1
   fi
 }
 

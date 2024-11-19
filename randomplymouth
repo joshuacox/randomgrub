@@ -13,6 +13,8 @@ if [[ ! -f $HISTORY_FILE ]]; then
 	touch $HISTORY_FILE >>$THIS_LOG 2>>$THIS_ERR
 fi
 trap cleanup EXIT
+open_file $THIS_LOG
+open_file $THIS_ERR
 
 main () {
   possible_themes=$(sudo plymouth-set-default-theme -l)
