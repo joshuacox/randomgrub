@@ -1,9 +1,10 @@
 #!/bin/bash
 source librandum.bash
-UPDATE_INTERVAL=2
+UPDATE_INTERVAL=1
 THIS_LOGDIR=/tmp
 THIS_NAME=randomplymouthupdater
 HISTORY_FILE=/var/log/.past_plymouths
+EXCLUDE_FILE=/root/.exclude_plymouths
 # Derived
 THIS_LOG=$THIS_LOGDIR/$THIS_NAME.log
 THIS_ERR=$THIS_LOGDIR/$THIS_NAME.err
@@ -23,6 +24,13 @@ main () {
     grep $i  $HISTORY_FILE > /dev/null
     if [[ $? -eq 1 ]];then
       themes+=("$i")
+    fi
+    grep $i $HISTORY_FILE > /dev/null
+    hist_check=$?
+    grep $i $EXCLUDE_FILE > /dev/null
+    exclude_check=$?
+    if [[ $hist_check -eq 1 && $exclude_check -eq 1 ]];then
+      theme_paths+=("$i")
     fi
   done
   if [[ -z $themes ]]; then

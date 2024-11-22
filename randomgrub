@@ -8,6 +8,7 @@ theme_dir_paths+=("/usr/share/grub/themes")
 #possible_theme_paths+=("/usr/share/grub/themes/Vimix)
 THIS_LOGDIR=/tmp
 THIS_NAME=randomgrub
+EXCLUDE_FILE=/root/.exclude_grubs
 HISTORY_FILE=/var/log/.past_grubs
 # Derived
 THIS_LOG=$THIS_LOGDIR/$THIS_NAME.log
@@ -32,7 +33,10 @@ main () {
     if [[ -f "$value" ]]; then
       alt_theme_paths+=("$value")
       grep $value  $HISTORY_FILE > /dev/null
-      if [[ $? -eq 1 ]];then
+      hist_check=$?
+      grep $value  $EXCLUDE_FILE > /dev/null
+      exclude_check=$?
+      if [[ $hist_check -eq 1 && $exclude_check -eq 1 ]];then
         theme_paths+=("$value")
       fi
     fi
