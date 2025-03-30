@@ -14,6 +14,8 @@ phile_czekr () {
   # ...and then just use integer math:
   if [ $file_age -le $file_age_thresh ]; then
     $function_to_run
+  elif [ "${USE_THE_FORCE_LUKE}" = "true" ]; then
+    $function_to_run
   else
     echo "$filename is up to date"
   fi

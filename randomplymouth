@@ -1,5 +1,6 @@
 #!/bin/bash
 source librandum.bash
+: ${DEBUG:=0}
 UPDATE_INTERVAL=1
 THIS_LOGDIR=/tmp
 THIS_NAME=randomplymouthupdater
@@ -8,9 +9,25 @@ EXCLUDE_FILE=/root/.exclude_plymouths
 # Derived
 THIS_LOG=$THIS_LOGDIR/$THIS_NAME.log
 THIS_ERR=$THIS_LOGDIR/$THIS_NAME.err
+
 open_file $THIS_LOG
 open_file $THIS_ERR
+
 trap cleanup EXIT
+
+if [[ $1 == "--force" ]]; then 
+  USE_THE_FORCE_LUKE='true'
+else
+  USE_THE_FORCE_LUKE='false'
+fi
+
+debug () {
+  if [[ $DEBUG ]]; then
+    echo "i = $i"
+    echo "hist_check = $hist_check"
+    echo "exclude_check = $exclude_check"
+  fi
+}
 
 main () {
   NOW=$(date +'%s')
@@ -21,16 +38,14 @@ main () {
   possible_themes=$(sudo plymouth-set-default-theme -l)
   for i in $possible_themes
   do
-    grep $i  $HISTORY_FILE > /dev/null
-    if [[ $? -eq 1 ]];then
-      themes+=("$i")
-    fi
     grep $i $HISTORY_FILE > /dev/null
     hist_check=$?
     grep $i $EXCLUDE_FILE > /dev/null
     exclude_check=$?
     if [[ $hist_check -eq 1 && $exclude_check -eq 1 ]];then
-      theme_paths+=("$i")
+      themes+=("$i")
+    else
+      debug
     fi
   done
   if [[ -z $themes ]]; then

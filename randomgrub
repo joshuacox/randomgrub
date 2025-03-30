@@ -19,6 +19,12 @@ open_file $THIS_ERR
 
 trap cleanup EXIT
 
+if [[ $1 == "--force" ]]; then 
+  USE_THE_FORCE_LUKE='true'
+else
+  USE_THE_FORCE_LUKE='false'
+fi
+
 main () {
   NOW=$(date +'%s')
   date -I >> $THIS_LOG
