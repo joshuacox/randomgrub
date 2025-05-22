@@ -1,10 +1,13 @@
-default: clean /root/randomgrub /root/randomplymouth /root/librandum.bash
+default: clean /root/randomgrub /root/randomplymouth /root/librandum.bash /root/randomrefind
 
 clean:
 	-@rm -v /root/randomgrub /root/randomplymouth /root/librandum.bash
 
 /root/randomgrub:
 	install -m511 randomgrub /root/randomgrub
+
+/root/randomrefind:
+	install -m511 randomrefind /root/randomrefind
 
 /root/randomplymouth:
 	install -m511 randomplymouth /root/randomplymouth

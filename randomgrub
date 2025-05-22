@@ -56,12 +56,6 @@ main () {
     theme_paths=$alt_theme_paths
   fi
   
-  print_all () {
-    for value in "${theme_paths[@]}"
-    do
-      echo $value
-    done
-  }
   #print_all
   #exit 1
   

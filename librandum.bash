@@ -52,3 +52,20 @@ theme_finder () {
     possible_theme_paths+=("$i")
   done
 }
+
+refind_theme_finder () {
+  # add any directory in /boot/grub/themes that contains a theme.txt
+  #for i in $(find /boot/grub/themes -name theme.txt)
+  cd $1
+  for i in $(find . -name theme.conf)
+  do
+    possible_theme_paths+=("$i")
+  done
+}
+
+print_all () {
+  for value in "${theme_paths[@]}"
+  do
+    echo $value
+  done
+}
