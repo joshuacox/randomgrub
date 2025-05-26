@@ -1,19 +1,17 @@
 #!/bin/bash
-source librandum.bash
-UPDATE_INTERVAL=1
-REFIND_TEMPLATE=/root/refind.template
-# Add any known themes to the possible_theme_paths array
-REFIND_CONF="/boot/efi/EFI/refind/refind.conf"
-theme_dir_path="/boot/efi/EFI/refind"
-#theme_dir_paths+=("/usr/share/grub/themes") 
-#possible_theme_paths+=("/usr/share/grub/themes/Vimix)
-THIS_LOGDIR=/tmp
 THIS_NAME=randomrefind
-EXCLUDE_FILE=/root/.exclude_refinds
-HISTORY_FILE=/var/log/.past_refinds
+source librandum.bash
+: ${THIS_LOGDIR:="/tmp"}
+: ${REFIND_UPDATE_INTERVAL:=1}
+: ${REFIND_CONF:="/boot/efi/EFI/refind/refind.conf"}
+: ${theme_dir_path:="/boot/efi/EFI/refind"}
+: ${REFIND_TEMPLATE:="/root/refind.template"}
+: ${EXCLUDE_FILE:="/root/.exclude_refinds"}
+: ${HISTORY_FILE:="/var/log/.past_refinds"}
 # Derived
-THIS_LOG=$THIS_LOGDIR/$THIS_NAME.log
-THIS_ERR=$THIS_LOGDIR/$THIS_NAME.err
+: ${THIS_LOG:="$THIS_LOGDIR/$THIS_NAME.log"}
+: ${THIS_ERR:="$THIS_LOGDIR/$THIS_NAME.err"}
+UPDATE_INTERVAL=${REFIND_UPDATE_INTERVAL}
 
 open_file $THIS_LOG
 open_file $THIS_ERR
@@ -92,5 +90,4 @@ else
   echo 'unknown option'
   exit 1
 fi
-
-
+exit 0
