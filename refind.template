@@ -1,0 +1,58 @@
+timeout 10
+use_nvram false
+screensaver 5
+enable_touch
+enable_mouse
+menuentry Linux {
+    icon EFI/refind/icons/os_linux.png
+    volume DEADBEEF 
+    loader bzImage-3.3.0-rc7
+    initrd initrd-3.3.0.img
+    options "ro root=UUID=deadbeef"
+    disabled
+}
+menuentry "Arch Linux" {
+    icon     /EFI/refind/icons/os_arch.png
+    volume   "Arch Linux"
+    loader   /boot/vmlinuz-linux
+    initrd   /boot/initramfs-linux.img
+    options  "root=PARTUUID=deadbeef rw add_efi_memmap"
+    submenuentry "Boot using fallback initramfs" {
+        initrd /boot/initramfs-linux-fallback.img
+    }
+    submenuentry "Boot to terminal" {
+        add_options "systemd.unit=multi-user.target"
+    }
+    disabled
+}
+menuentry Ubuntu {
+    loader /EFI/ubuntu/grubx64.efi
+    icon /EFI/refind/icons/os_linux.png
+    disabled
+}
+menuentry "ELILO" {
+    loader \EFI\elilo\elilo.efi
+    disabled
+}
+menuentry "Windows 7" {
+    loader \EFI\Microsoft\Boot\bootmgfw.efi
+    disabled
+}
+menuentry "Windows via shell script" {
+    icon \EFI\refind\icons\os_win.png
+    loader \EFI\tools\shell.efi
+    options "fs0:\EFI\tools\launch_windows.nsh"
+    disabled
+}
+menuentry "My macOS" {
+    icon \EFI\refind\icons\os_mac.png
+    volume "macOS boot"
+    loader \System\Library\CoreServices\boot.efi
+    disabled
+}
+menuentry "macOS via BootNext" {
+    icon /EFI/refind/icons/os_mac.png
+    firmware_bootnum 80
+    disabled
+}
+include ${REFIND_THEME}
